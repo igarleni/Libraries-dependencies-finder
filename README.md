@@ -2,14 +2,14 @@
 
 ###### Get dependencies in an easy way
 
-This helpful tool will **look for your libraries dependencies** and **sort them by its dependency** without efford. You may need to list your dependencies on a csv file, so you can plot them on your future script report. If you need to do this, I am your script!
+This helpful tool will **look for your libraries dependencies** and **sort them by its dependency** without efford. You may need to list your libraries and its dependencies on a csv file, so you can plot them on your future script report. If you need to do this, I am your script!
 
 
 ## Typical usages
 
-The initial use you will made with this script may be look for your first dependencies to generate a csv list. You can do this by creating an vector of libraries you want to add, and then get its versions (if you want to add this column):
+**The initial use you should do** with this script may be **look for your first libraries and its dependencies** to generate an initial csv list. You can do this by creating an vector of libraries you want to add, and then get its versions (if you want to add this column):
 ```R
-addLibraries(c("dplyr","xml2"))  # Generates "miniCran.csv" file
+addLibraries(c("dplyr","xml2"))  # Generates "miniCran.csv" file with this two libraries and its dependencies
 
 addVersion("miniCran.csv")  # Generates "miniCranVersion.csv" with versions & libraries names
 
