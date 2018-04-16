@@ -3,6 +3,66 @@
 #########################################################################
 library(miniCRAN)
 
+#' @title addLibraries
+#' @description Function reads a csvFile with almost 1 column named "Package" (if provided), and a vector of 
+#' libraries. Then, it executes getDependencies function with both libraries list joined and save it on a new
+#' csv file named "miniCran.csv". It also test the results for better reliability. The csv file returned has 3 
+#' columns: numeric id, "Package".
+#' 
+#' @field fileName: the path to the library csv (non mandatory)
+#' @field newLibraries: a list of new libraries the user wants to add to the previous one.
+#' @import miniCRAN
+#' @export
+#' @author Italo Garleni
+#' 
+addLibraries = function(newLibraries, fileName = NULL)
+{
+  if(is.null(fileName))
+  {
+    libraries = newLibraries
+  }
+  else
+  {
+    libraries = read.csv(fileName, sep = ";")["Package"]
+    libraries = as.character(unlist(libraries))
+    libraries = c(libraries, newLibraries)
+  }
+  listDependencies = getDependencies(libraries)
+  testDependencies(listDependencies)
+  
+  dfDependencies = as.data.frame(listDependencies)
+  names(dfDependencies) = c("Package")
+  write.csv2(dfDependencies,"miniCran.csv",quote = FALSE)
+}
+
+
+#' @title addVersion
+#' @description Function reads a csvFile with almost 1 column named "Package". Then, it checks libraries
+#' version on local machine and save it on a new csv file named "miniCranVersion.csv". The csv file
+#' returned has 3 columns: numeric id, "Package", and "Version".
+#' 
+#' @field fileName: the path to the library csv.
+#' @import miniCRAN
+#' @export
+#' @author Italo Garleni
+#' 
+addVersion = function(fileName)
+{
+  libraries = read.csv(fileName, sep = ";")["Package"]
+  libraries["Version"] = "NotFound"
+  for(libraryId in 1:nrow(libraries))
+    libraries[libraryId,2] = tryCatch(
+      {
+        packageDescription(libraries[libraryId,1])$Version
+      },
+      error = function(e) {
+        print(paste0("library ", library, " not found!"))
+        "NotFound"
+      }
+    )
+  write.csv2(libraries,"miniCranVersion.csv",quote = FALSE)
+}
+
 
 #' @title getDependencies
 #' @description Function that returns libraries' dependencies over a list of libraries, sorted by
@@ -54,39 +114,6 @@ getDependencies = function(libraries)
 }
 
 
-#' @title addLibraries
-#' @description Function reads a csvFile with almost 1 column named "Package" (if provided), and a vector of 
-#' libraries. Then, it executes getDependencies function with both libraries list joined and save it on a new
-#' csv file named "miniCran.csv". It also test the results for better reliability. The csv file returned has 3 
-#' columns: numeric id, "Package".
-#' 
-#' @field fileName: the path to the library csv (non mandatory)
-#' @field newLibraries: a list of new libraries the user wants to add to the previous one.
-#' @import miniCRAN
-#' @export
-#' @author Italo Garleni
-#' 
-addLibraries = function(newLibraries, fileName = NULL)
-{
-  if(is.null(fileName))
-  {
-    libraries = newLibraries
-  }
-  else
-  {
-    libraries = read.csv(fileName, sep = ";")["Package"]
-    libraries = as.character(unlist(libraries))
-    libraries = c(libraries, newLibraries)
-  }
-  listDependencies = getDependencies(libraries)
-  testDependencies(listDependencies)
-  
-  dfDependencies = as.data.frame(listDependencies)
-  names(dfDependencies) = c("Package")
-  write.csv2(dfDependencies,"miniCran.csv",quote = FALSE)
-}
-
-
 #' @title testDependencies
 #' @description Function reads a csvFile with almost 1 column named "Package", and a vector of libraries.
 #' Then, it executes getDependencies function with both libraries list joined and save it on a new csv file
@@ -119,32 +146,4 @@ testDependencies = function(listDependencies)
       print(paste0(listDependencies[i]," validated."))
     }
   }
-}
-
-
-#' @title addVersion
-#' @description Function reads a csvFile with almost 1 column named "Package". Then, it checks libraries
-#' version on local machine and save it on a new csv file named "miniCranVersion.csv". The csv file
-#' returned has 3 columns: numeric id, "Package", and "Version".
-#' 
-#' @field fileName: the path to the library csv.
-#' @import miniCRAN
-#' @export
-#' @author Italo Garleni
-#' 
-addVersion = function(fileName)
-{
-  libraries = read.csv(fileName, sep = ";")["Package"]
-  libraries["Version"] = "NotFound"
-  for(libraryId in 1:nrow(libraries))
-    libraries[libraryId,2] = tryCatch(
-      {
-        packageDescription(libraries[libraryId,1])$Version
-      },
-      error = function(e) {
-        print(paste0("library ", library, " not found!"))
-        "NotFound"
-      }
-    )
-  write.csv2(libraries,"miniCranVersion.csv",quote = FALSE)
 }
