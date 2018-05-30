@@ -3,16 +3,17 @@
 #########################################################################
 library(miniCRAN)
 
-#' @title addLibraries
+#' @name addLibraries
 #' @description Function reads a csvFile with almost 1 column named "Package" (if provided), and a vector of 
 #' libraries. Then, it executes getDependencies function with both libraries list joined and save it on a new
 #' csv file named "miniCran.csv". It also test the results for better reliability. The csv file returned has 3 
 #' columns: numeric id, "Package".
-#' 
-#' @field fileName: the path to the library csv (non mandatory)
-#' @field newLibraries: a list of new libraries the user wants to add to the previous one.
 #' @import miniCRAN
-#' @export
+#' 
+#' @param fileName: the path to the library csv (non mandatory)
+#' @param newLibraries: a list of new libraries the user wants to add to the previous one.
+#' @seealso minicran.csv, on working directory.
+#' 
 #' @author Italo Garleni
 #' 
 addLibraries = function(newLibraries, fileName = NULL)
@@ -36,14 +37,15 @@ addLibraries = function(newLibraries, fileName = NULL)
 }
 
 
-#' @title addVersion
+#' @name addVersion
 #' @description Function reads a csvFile with almost 1 column named "Package". Then, it checks libraries
 #' version on local machine and save it on a new csv file named "miniCranVersion.csv". The csv file
 #' returned has 3 columns: numeric id, "Package", and "Version".
-#' 
-#' @field fileName: the path to the library csv.
 #' @import miniCRAN
-#' @export
+#' 
+#' @param fileName: the path to the library csv.
+#' @seealso miniCranVersion.csv, on working directory. 
+#' 
 #' @author Italo Garleni
 #' 
 addVersion = function(fileName)
@@ -64,14 +66,15 @@ addVersion = function(fileName)
 }
 
 
-#' @title getDependencies
+#' @name getDependencies
 #' @description Function that returns libraries' dependencies over a list of libraries, sorted by
 #'  its dependency. Being ['n'=length(libraries)] and [1<='i'<='n'], library 'i' depends (or not)
 #'  on the previous '1' to 'i' libraries, but never the other way around.
-#' 
-#' @field libraries: a list of libraries the user wants to analyze.
 #' @import miniCRAN
-#' @export
+#' 
+#' @param libraries: a list of libraries the user wants to analyze.
+#' @return vector with dependencies and library, sorted by its dependency.
+#' 
 #' @author Italo Garleni
 #' 
 getDependencies = function(libraries)
@@ -82,7 +85,7 @@ getDependencies = function(libraries)
   
   firstLibraryDependencies = tryCatch(
     {
-      pkgDep(firstLibrary, suggests=F, includeBasePkgs=T,depends = T)
+      pkgDep(firstLibrary, suggests=F, includeBasePkgs=F, depends = T)
     },
     error = function(e) {
       firstLibrary
@@ -114,15 +117,16 @@ getDependencies = function(libraries)
 }
 
 
-#' @title testDependencies
+#' @name testDependencies
 #' @description Function reads a csvFile with almost 1 column named "Package", and a vector of libraries.
 #' Then, it executes getDependencies function with both libraries list joined and save it on a new csv file
 #' named "newMiniCran.csv". It also test the results for better reliability. The csv file returned has 3 
 #' columns: numeric id, "Package".
-#' 
-#' @field listDependencies: a list of libraries the user wants to check.
 #' @import miniCRAN
-#' @export
+#' 
+#' @param listDependencies: a list of libraries the user wants to check.
+#' @seealso standard output (console)
+#' 
 #' @author Italo Garleni
 #' 
 testDependencies = function(listDependencies)
@@ -131,7 +135,7 @@ testDependencies = function(listDependencies)
   {
     dependencies = tryCatch(
       {
-        pkgDep(listDependencies[i], suggests=F, includeBasePkgs =T,depends = T)
+        pkgDep(listDependencies[i], suggests=F, includeBasePkgs = F, depends = T)
       },
       error = function(e) {
         listDependencies[i]
