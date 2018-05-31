@@ -57,7 +57,7 @@ addVersion <- function(fileName, outputFilename)
       },
       error = function(e)
       {
-        print(paste0("library ", library, " not found!"))
+        print(paste0("library ", libraries[libraryId,1], " not found!"))
         "NotFound"
       }
     )
