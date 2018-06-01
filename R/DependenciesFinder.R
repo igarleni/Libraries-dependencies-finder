@@ -2,6 +2,7 @@
 #' @title parse version of Library.
 #' @description Function that parses the version of library installed on 
 #'  local R.
+#' @export
 #' @import miniCRAN
 #' @param library library name.
 #' @return library version or "NotFound"

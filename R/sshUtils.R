@@ -1,40 +1,64 @@
-#' @name parseRemoteCSVFile
+#' @name readCSVFromRemote
 #' @title parse csv file from server.
 #' @description Function that parses a csv file from a remote server, and 
 #'  and convert it to data.frame.
-#' @import RCurl
 #' @param fileFullPath file path and name.
 #' @param userName user name on remote host.
 #' @param password user password on remote host.
 #' @param sshURL url to remote host.
 #' @return a data.frame
 #' @author Italo Garleni
-readRemoteCSVFile <- function(fileFullPath, userName, password, sshURL)
+readCSVFromRemote <- function(fileFullPath, userName, password, sshURL)
 {
-  workingPath <- getwd()
-  fileName <- basename(fileFullPath)
+  tempPath <- tempdir()
   scpQuery <- paste0("pscp -pw ", password," ", userName, "@", sshURL, ":",
-                     fileFullPath, " ", workingPath)
+                     fileFullPath, " ", tempPath)
   system(scpQuery)
-  inputData <- read.csv(fileName, sep = ";", stringsAsFactors = FALSE)
-  file.remove(fileName)
+  
+  fileName <- basename(fileFullPath)
+  tempFileFullPath <- paste0(tempPath, fileName)
+  inputData <- read.csv(tempFileFullPath, sep = ";", stringsAsFactors = FALSE)
+  file.remove(tempFileFullPath)
   return(inputData)
 }
 
-writeToRemoteCSVFile <- function(inputData, remoteFullPath, userName, password,
+#' @name writeCSVToRemote
+#' @title write csv file on server.
+#' @description Function that upload data.frame as a csv file on a remote
+#'  server.
+#' @param inputData data frame to upload.
+#' @param remoteFullPath file path and name.
+#' @param userName user name on remote host.
+#' @param password user password on remote host.
+#' @param sshURL url to remote host.
+#' @author Italo Garleni
+writeCSVToRemote <- function(inputData, remoteFullPath, userName, password,
                                  sshURL)
 {
-  workingPath <- getwd()
+  localFullPath <- paste0(getwd(), "/", fileName)
   fileName <- basename(remoteFullPath)
-  write.csv2(inputData, fileName, quote = FALSE)
-  scpQuery <- paste0("pscp -pw ", password," ", workingPath, "/",fileName,
-                     " ", userName, "@", sshURL, ":", remoteFullPath)
+  write.csv2(inputData, localFullPath, quote = FALSE)
+  uploadToRemote(localFullPath, remoteFullPath, userName, password, sshURL)
+}
+
+#' @name uploadToRemote
+#' @title push file to server.
+#' @description Function that upload file on a remote server.
+#' @param localFullPath local file to upload.
+#' @param remoteFullPath file path and name.
+#' @param userName user name on remote host.
+#' @param password user password on remote host.
+#' @param sshURL url to remote host.
+#' @author Italo Garleni
+uploadToRemote <- function(localFullPath, remoteFullPath, userName, 
+                               password, sshURL)
+{
+  scpQuery <- paste0("pscp -pw ", password," ", localFullPath, " ", userName,
+                     "@", sshURL, ":", remoteFullPath)
   success <- system(scpQuery)
   if(success)
     file.remove(fileName)
   else
     stop(paste("Fail on upload to remote server. You can find the file on",
-               workingPath," and upload it manually and execute",
-               "updateVersion()."), call. = FALSE)
+               localFullPath), call. = FALSE)
 }
-

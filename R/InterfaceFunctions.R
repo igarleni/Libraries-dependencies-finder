@@ -1,4 +1,4 @@
-#' @name generateMiniCran
+#' @name updateDependencies
 #' @title Add libraries to Libraries list or initiazlite it.
 #' @description Function reads a csvFile with almost 1 column named "Package"
 #'  (if provided), and a vector of libraries. Then, it executes getDependencies
@@ -11,7 +11,7 @@
 #' @param outputFileName name of the output csv file.
 #' @param fileName (optional) the path to a csv with libraries.
 #' @author Italo Garleni
-generateMiniCran <- function(newLibraries, outputFileName, fileName = NULL)
+updateDependencies <- function(newLibraries, outputFileName, fileName = NULL)
 {
   if(is.null(fileName))
   {
@@ -58,9 +58,8 @@ updateVersion <- function(fileName, outputFileName)
 #' @param outputRemoteFile name of the output csv file.
 #' @param fileName (optional) the path to a csv with libraries.
 #' @author Italo Garleni
-updateMiniCranOnServer <- function(newLibraries, outputRemotePath,
-                                   outputFileName, userName, password, sshURL,
-                                   remoteOldFile = NULL)
+updateDependenciesOnServer <- function(newLibraries, remoteFullPath, userName,
+                                   password, sshURL, remoteOldFile = NULL)
 {
   if(is.null(remoteOldFile))
   {
@@ -68,13 +67,12 @@ updateMiniCranOnServer <- function(newLibraries, outputRemotePath,
   }
   else
   {
-    libraries <- parseRemoteCSVFile(remoteOldFile, userName, password, sshURL)
+    libraries <- readCSVFromRemote(remoteOldFile, userName, password, sshURL)
     libraries <- as.character(libraries[["Package"]])
     libraries <- c(libraries, newLibraries)
   }
   librariesWithDependencies <- getDependencies(libraries)
   librariesData <- data.frame(Package = librariesWithDependencies)
-  writeToRemoteCSVFile(librariesData, outputRemotePath, outputFileName, 
-                       userName, password, sshURL)
-  #'@TODO run updateVersion on remote server
+  writeCSVToRemote(librariesData, remoteFullPath, userName, password,
+                       sshURL)
 }
