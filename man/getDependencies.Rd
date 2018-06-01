@@ -2,12 +2,12 @@
 % Please edit documentation in R/DependenciesFinder.R
 \name{getDependencies}
 \alias{getDependencies}
-\title{Search for libraries dependencies}
+\title{Search for libraries dependencies.}
 \usage{
 getDependencies(libraries)
 }
 \arguments{
-\item{libraries:}{a list of libraries the user wants to analyze.}
+\item{libraries}{a list of libraries the user wants to analyze.}
 }
 \value{
 vector with dependencies and library, sorted by its dependency.

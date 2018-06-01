@@ -7,7 +7,7 @@
 testDependencies(listLibraries)
 }
 \arguments{
-\item{listLibraries:}{a list of libraries the user wants to check.}
+\item{listLibraries}{a list of libraries the user wants to check.}
 }
 \description{
 Function reads a list of dependencies and tests if they exists

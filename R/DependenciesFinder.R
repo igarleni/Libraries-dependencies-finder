@@ -30,7 +30,7 @@ getVersion <- function(library)
 #'  libraries, but never the other way around.
 #' @import miniCRAN
 #' @export
-#' @param libraries: a list of libraries the user wants to analyze.
+#' @param libraries a list of libraries the user wants to analyze.
 #' @return vector with dependencies and library, sorted by its dependency.
 #' @author Italo Garleni
 getDependencies <- function(libraries)
@@ -83,7 +83,7 @@ getDependencies <- function(libraries)
 #'  libraries, but never the other way around.
 #' @import miniCRAN
 #' @export
-#' @param listLibraries: a list of libraries the user wants to check.
+#' @param listLibraries a list of libraries the user wants to check.
 #' @seealso standard output (console)
 #' @author Italo Garleni
 testDependencies <- function(listLibraries)
