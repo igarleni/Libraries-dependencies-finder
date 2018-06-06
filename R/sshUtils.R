@@ -6,7 +6,7 @@
 #' @param fileFullPath remote file path and name.
 #' @param userName user name on remote host.
 #' @param password user password on remote host.
-#' @param sshURL url to remote host.
+#' @param sshURL url to remote host (IP not permitted).
 #' @return a data.frame
 #' @author Italo Garleni
 readCSVFromRemote <- function(fileFullPath, userName, password, sshURL)
@@ -29,10 +29,11 @@ readCSVFromRemote <- function(fileFullPath, userName, password, sshURL)
 #'  server.
 #' @keywords internal
 #' @param inputData data frame to upload.
-#' @param remoteFullPath remote file path and name.
+#' @param remoteFullPath remote file path and name (without "~/" or "/" if you
+#'  want to start from your home direcory).
 #' @param userName user name on remote host.
 #' @param password user password on remote host.
-#' @param sshURL url to remote host.
+#' @param sshURL url to remote host (IP not permitted).
 #' @author Italo Garleni
 writeCSVToRemote <- function(inputData, remoteFullPath, userName, password, 
                              sshURL)
@@ -50,15 +51,15 @@ writeCSVToRemote <- function(inputData, remoteFullPath, userName, password,
 #' @description Function that upload file on a remote server.
 #' @keywords internal
 #' @param localFullPath local file to upload.
-#' @param remoteFullPath remote file path and name.
+#' @param remoteFullPath remote file path and name (without "~/" or "/" if you
+#'  want to start from your home direcory).
 #' @param userName user name on remote host.
 #' @param password user password on remote host.
-#' @param sshURL url to remote host.
+#' @param sshURL url to remote host (IP not permitted).
 #' @author Italo Garleni
 uploadToRemote <- function(localFullPath, remoteFullPath, userName, 
                                password, sshURL)
 {
-  browser()
   scpQuery <- paste0("pscp -pw ", password," ", localFullPath, " ", userName,
                      "@", sshURL, ":", remoteFullPath)
   haveErrors <- system(scpQuery)

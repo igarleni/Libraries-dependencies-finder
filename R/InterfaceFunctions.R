@@ -55,10 +55,11 @@ updateVersion <- function(fileName, outputFileName)
 #' @export
 #' @param newLibraries a list of new libraries the user wants to add to the
 #'  previous one.
-#' @param remoteOutputFullPath name of the remote output csv file.
+#' @param remoteOutputFullPath name of the remote output csv file (without "~/" 
+#'  or "/" if you want to start from your home direcory).
 #' @param userName user name on remote host.
 #' @param password user password on remote host.
-#' @param sshURL url to remote host.
+#' @param sshURL url to remote host (IP not permitted).
 #' @param remoteOldFile (optional) path to a remote csv with libraries.
 #' @author Italo Garleni
 updateDependenciesOnServer <- function(newLibraries, remoteOutputFullPath,
