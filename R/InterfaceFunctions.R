@@ -34,7 +34,7 @@ updateDependencies <- function(newLibraries, outputFileName, fileName = NULL)
 #'  Then, it gets the version of each package on that column and generates a new
 #'  column with this data. After this, saves this file on the path defined by 
 #'  user.
-#' @keywords internal
+#' @export
 #' @param fileName the path to a csv with libraries.
 #' @param outputFileName path of the output csv file.
 #' @author Italo Garleni
